@@ -430,3 +430,4 @@
 # /utils/wxrc/
 /utils/wxrc/*.sln
 /utils/wxrc/*.dsw
+/build/msw/.vs
