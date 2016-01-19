@@ -23,6 +23,7 @@
 
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
+#include <vector>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -1505,9 +1506,13 @@ wxString::Replace(const wxChar *szOld, const wxChar *szNew, bool bReplaceAll)
 
     size_t uiCount = 0;   // count of replacements made
 
-    // optimize the special common case of replacing one character with another
-    // one
-    if ( szOld[1] == '\0' && (szNew[0] != '\0' && szNew[1] == '\0') )
+    // optimize the special common case: replacement of one character by
+    // another one (in UTF-8 case we can only do this for ASCII characters)
+    //
+    // benchmarks show that this special version is around 3 times faster
+    // (depending on the proportion of matching characters and UTF-8/wchar_t
+    // build)
+    if (wxStrlen(szOld) == 1 && wxStrlen(szNew) == 1)
     {
         // this loop is the simplified version of the one below
         for ( size_t pos = 0; ; )
@@ -1524,34 +1529,67 @@ wxString::Replace(const wxChar *szOld, const wxChar *szNew, bool bReplaceAll)
                 break;
         }
     }
-    else // general case
+    else if (!bReplaceAll)
+    {
+        size_t pos = find(szOld, 0);
+        if (pos != npos)
+        {
+            replace(pos, wxStrlen(szOld), szNew);
+            uiCount = 1;
+        }
+    }
+    else // replace all occurrences
     {
         const size_t uiOldLen = wxStrlen(szOld);
         const size_t uiNewLen = wxStrlen(szNew);
 
-        for ( size_t pos = 0; ; )
+        // first scan the string to find all positions at which the replacement
+        // should be made
+        std::vector<size_t> replacePositions;
+
+        size_t pos;
+        for (pos = find(szOld, 0);
+            pos != npos;
+            pos = find(szOld, pos + uiOldLen))
         {
-            pos = find(szOld, pos);
-            if ( pos == npos )
-                break;
-
-            // replace this occurrence of the old string with the new one
-            replace(pos, uiOldLen, szNew, uiNewLen);
-
-            // move past the string that was replaced
-            pos += uiNewLen;
-
-            // increase replace count
-            uiCount++;
-
-            // stop now?
-            if ( !bReplaceAll )
-                break;
+            replacePositions.push_back(pos);
+            ++uiCount;
         }
+
+        if (!uiCount)
+            return 0;
+
+        // allocate enough memory for the whole new string
+        wxString tmp;
+        tmp.reserve(length() + uiCount*(uiNewLen - uiOldLen));
+
+        // copy this string to tmp doing replacements on the fly
+        size_t replNum = 0;
+        for (pos = 0; replNum < uiCount; replNum++)
+        {
+            const size_t nextReplPos = replacePositions[replNum];
+
+            if (pos != nextReplPos)
+            {
+                tmp.append(c_str() + pos, nextReplPos - pos);
+            }
+
+            tmp.append(szNew);
+            pos = nextReplPos + uiOldLen;
+        }
+
+        if (pos != length())
+        {
+            // append the rest of the string unchanged
+            tmp.append(c_str() + pos, length() - pos);
+        }
+
+        swap(tmp);
     }
 
     return uiCount;
 }
+
 
 bool wxString::IsAscii() const
 {
