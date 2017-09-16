@@ -186,9 +186,9 @@ wxMenuItem::~wxMenuItem()
 // ----
 
 // return the id for calling Win32 API functions
-int wxMenuItem::GetRealId() const
+WXWPARAM wxMenuItem::GetRealId() const
 {
-    return m_subMenu ? (int)m_subMenu->GetHMenu() : GetId();
+    return m_subMenu ? wxPtrToUInt(m_subMenu->GetHMenu()) : GetId();
 }
 
 // get item state

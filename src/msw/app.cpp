@@ -289,20 +289,6 @@ bool wxApp::Initialize(int& argc, wxChar **argv)
     // ensure that base cleanup is done if we return too early
     wxCallBaseCleanup callBaseCleanup(this);
 
-#ifdef __WXWINCE__
-    wxString tmp = GetAppName();
-    tmp += wxT("ClassName");
-    wxCanvasClassName = wxStrdup( tmp.c_str() );
-    tmp += wxT("NR");
-    wxCanvasClassNameNR = wxStrdup( tmp.c_str() );
-    HWND hWnd = FindWindow( wxCanvasClassNameNR, NULL );
-    if (hWnd)
-    {
-        SetForegroundWindow( (HWND)(((DWORD)hWnd)|0x01) );
-        return false;
-    }
-#endif
-
 #if !defined(__WXMICROWIN__)
     InitCommonControls();
 #endif // !defined(__WXMICROWIN__)
@@ -311,17 +297,9 @@ bool wxApp::Initialize(int& argc, wxChar **argv)
     SHInitExtraControls();
 #endif
 
-#ifndef __WXWINCE__
-    // Don't show a message box if a function such as SHGetFileInfo
-    // fails to find a device.
-    SetErrorMode(SEM_FAILCRITICALERRORS|SEM_NOOPENFILEERRORBOX);
-#endif
-
     wxOleInitialize();
 
     RegisterWindowClasses();
-
-    wxWinHandleHash = new wxWinHashTable(wxKEY_INTEGER, 100);
 
 #if !defined(__WXMICROWIN__) && !defined(__WXWINCE__)
     wxSetKeyboardHook(true);
@@ -493,14 +471,6 @@ void wxApp::CleanUp()
     // which case the registration will fail after the first time if we don't
     // unregister the classes now
     UnregisterWindowClasses();
-
-    delete wxWinHandleHash;
-    wxWinHandleHash = NULL;
-
-#ifdef __WXWINCE__
-    free( wxCanvasClassName );
-    free( wxCanvasClassNameNR );
-#endif
 }
 
 // ----------------------------------------------------------------------------

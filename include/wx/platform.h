@@ -661,4 +661,21 @@
     #include <AvailabilityMacros.h>
 #endif
 
+/*
+   This macro can be used to test the Visual C++ version.
+*/
+#ifndef __VISUALC__
+#   define wxVISUALC_VERSION(major) 0
+#   define wxCHECK_VISUALC_VERSION(major) 0
+#else
+    /*
+        Things used to be simple with the _MSC_VER value and the version number
+        increasing in lock step, but _MSC_VER value of 1900 is VC14 and not the
+        non existing (presumably for the superstitious reasons) VC13, so we now
+        need to account for this with an extra offset.
+     */
+#   define wxVISUALC_VERSION(major) ( (6 + (major >= 14 ? 1 : 0) + major) * 100 )
+#   define wxCHECK_VISUALC_VERSION(major) ( __VISUALC__ >= wxVISUALC_VERSION(major) )
+#endif
+
 #endif /* _WX_PLATFORM_H_ */

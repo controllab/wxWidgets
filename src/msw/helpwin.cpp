@@ -98,7 +98,7 @@ bool wxWinHelpController::KeywordSearch(const wxString& k,
 
     wxString str = GetValidFilename(m_helpFile);
 
-    return (WinHelp(GetSuitableHWND(this), (const wxChar*) str, HELP_PARTIALKEY, (DWORD)(const wxChar*) k) != 0);
+    return (WinHelp(GetSuitableHWND(this), (const wxChar*) str, HELP_PARTIALKEY, (ULONG_PTR)(const wxChar*) k) != 0);
 }
 
 // Can't close the help window explicitly in WinHelp

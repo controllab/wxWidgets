@@ -822,7 +822,7 @@ static bool wxLaunchDefaultBrowserBaseImpl(const wxString& url, int flags)
     //hInstApp member is only valid if the function fails, in which case it
     //receives one of the following error values, which are less than or
     //equal to 32.
-    const int nResult = (int) sei.hInstApp;
+    const unsigned int nResult = wxPtrToUInt(sei.hInstApp);
 
     // Firefox returns file not found for some reason, so make an exception
     // for it

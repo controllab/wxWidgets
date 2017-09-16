@@ -75,7 +75,8 @@
     // this is where _beginthreadex() is declared
     #include <process.h>
 
-    // the return type of the thread function entry point
+    // the return type of the thread function entry point: notice that this
+    // type can't hold a pointer under Win64
     typedef unsigned THREAD_RETVAL;
 
     // the calling convention of the thread function entry point
@@ -85,6 +86,8 @@
     typedef DWORD THREAD_RETVAL;
     #define THREAD_CALLCONV WINAPI
 #endif
+
+static const THREAD_RETVAL THREAD_ERROR_EXIT = (THREAD_RETVAL)-1;
 
 // this is a hack to allow the code here to know whether wxEventLoop is
 // currently running: as wxBase doesn't have event loop at all, we can't simple
@@ -510,19 +513,19 @@ THREAD_RETVAL wxThreadInternal::DoThreadStart(wxThread *thread)
 {
     wxON_BLOCK_EXIT1(DoThreadOnExit, thread);
 
-    THREAD_RETVAL rc = (THREAD_RETVAL)-1;
+    THREAD_RETVAL rc = THREAD_ERROR_EXIT;
 
     wxTRY
     {
         // store the thread object in the TLS
         if ( !::TlsSetValue(gs_tlsThisThread, thread) )
         {
-            wxLogSysError(_("Can not start thread: error writing TLS."));
+            wxLogSysError(_("Cannot start thread: error writing TLS."));
 
-            return (THREAD_RETVAL)-1;
+            return THREAD_ERROR_EXIT;
         }
 
-        rc = (THREAD_RETVAL)thread->Entry();
+        rc = wxPtrToUInt(thread->Entry());
     }
     wxCATCH_ALL( wxTheApp->OnUnhandledException(); )
 
@@ -532,7 +535,7 @@ THREAD_RETVAL wxThreadInternal::DoThreadStart(wxThread *thread)
 /* static */
 THREAD_RETVAL THREAD_CALLCONV wxThreadInternal::WinThreadStart(void *param)
 {
-    THREAD_RETVAL rc = (THREAD_RETVAL)-1;
+    THREAD_RETVAL rc = THREAD_ERROR_EXIT;
 
     wxThread * const thread = (wxThread *)param;
 
@@ -551,7 +554,7 @@ THREAD_RETVAL THREAD_CALLCONV wxThreadInternal::WinThreadStart(void *param)
         else
             rc = DoThreadStart(thread);
     }
-    wxSEH_HANDLE((THREAD_RETVAL)-1)
+    wxSEH_HANDLE(THREAD_ERROR_EXIT)
 
 
     // save IsDetached because thread object can be deleted by joinable
@@ -606,7 +609,7 @@ void wxThreadInternal::SetPriority(unsigned int priority)
 bool wxThreadInternal::Create(wxThread *thread, unsigned int stackSize)
 {
     wxASSERT_MSG( m_state == STATE_NEW && !m_hThread,
-                    _T("Create()ing thread twice?") );
+                    wxT("Create()ing thread twice?") );
 
     // for compilers which have it, we should use C RTL function for thread
     // creation instead of Win32 API one because otherwise we will have memory
@@ -684,7 +687,7 @@ wxThreadInternal::WaitForTerminate(wxCriticalSection& cs,
     // from Wait()) or ask it to terminate (when called from Delete())
     bool shouldDelete = threadToDelete != NULL;
 
-    wxThread::ExitCode rc = 0;
+    DWORD rc = 0;
 
     // we might need to resume the thread if it's currently stopped
     bool shouldResume = false;
@@ -785,7 +788,7 @@ wxThreadInternal::WaitForTerminate(wxCriticalSection& cs,
         {
             case 0xFFFFFFFF:
                 // error
-                wxLogSysError(_("Can not wait for thread termination"));
+                wxLogSysError(_("Cannot wait for thread termination"));
                 Kill();
                 return wxTHREAD_KILLED;
 
@@ -833,16 +836,16 @@ wxThreadInternal::WaitForTerminate(wxCriticalSection& cs,
     // terminated if the "if" above hadn't been taken
     for ( ;; )
     {
-        if ( !::GetExitCodeThread(m_hThread, (LPDWORD)&rc) )
+        if ( !::GetExitCodeThread(m_hThread, &rc) )
         {
             wxLogLastError(wxT("GetExitCodeThread"));
 
-            rc = (wxThread::ExitCode)-1;
+            rc = THREAD_ERROR_EXIT;
 
             break;
         }
 
-        if ( (DWORD)rc != STILL_ACTIVE )
+        if ( rc != STILL_ACTIVE )
             break;
 
         // give the other thread some time to terminate, otherwise we may be
@@ -851,14 +854,13 @@ wxThreadInternal::WaitForTerminate(wxCriticalSection& cs,
     }
 
     if ( pRc )
-        *pRc = rc;
+        *pRc = wxUIntToPtr(rc);
 
     // we don't need the thread handle any more in any case
     Free();
 
 
-    return rc == (wxThread::ExitCode)-1 ? wxTHREAD_MISC_ERROR
-                                        : wxTHREAD_NO_ERROR;
+    return rc == THREAD_ERROR_EXIT ? wxTHREAD_MISC_ERROR : wxTHREAD_NO_ERROR;
 }
 
 bool wxThreadInternal::Suspend()
@@ -950,7 +952,7 @@ bool wxThread::SetConcurrency(size_t WXUNUSED_IN_WINCE(level))
 #ifdef __WXWINCE__
     return false;
 #else
-    wxASSERT_MSG( IsMain(), _T("should only be called from the main thread") );
+    wxASSERT_MSG( IsMain(), wxT("should only be called from the main thread") );
 
     // ok only for the default one
     if ( level == 0 )
@@ -961,7 +963,7 @@ bool wxThread::SetConcurrency(size_t WXUNUSED_IN_WINCE(level))
     DWORD_PTR dwProcMask, dwSysMask;
     if ( ::GetProcessAffinityMask(hProcess, &dwProcMask, &dwSysMask) == 0 )
     {
-        wxLogLastError(_T("GetProcessAffinityMask"));
+        wxLogLastError(wxT("GetProcessAffinityMask"));
 
         return false;
     }
@@ -1000,7 +1002,7 @@ bool wxThread::SetConcurrency(size_t WXUNUSED_IN_WINCE(level))
     // could we set all bits?
     if ( level != 0 )
     {
-        wxLogDebug(_T("bad level %u in wxThread::SetConcurrency()"), level);
+        wxLogDebug(wxT("bad level %u in wxThread::SetConcurrency()"), level);
 
         return false;
     }
@@ -1015,7 +1017,7 @@ bool wxThread::SetConcurrency(size_t WXUNUSED_IN_WINCE(level))
 
     if ( !pfnSetProcessAffinityMask )
     {
-        HMODULE hModKernel = ::LoadLibrary(_T("kernel32"));
+        HMODULE hModKernel = ::LoadLibrary(wxT("kernel32"));
         if ( hModKernel )
         {
             pfnSetProcessAffinityMask = (SETPROCESSAFFINITYMASK)
@@ -1024,7 +1026,7 @@ bool wxThread::SetConcurrency(size_t WXUNUSED_IN_WINCE(level))
 
         // we've discovered a MT version of Win9x!
         wxASSERT_MSG( pfnSetProcessAffinityMask,
-                      _T("this system has several CPUs but no SetProcessAffinityMask function?") );
+                      wxT("this system has several CPUs but no SetProcessAffinityMask function?") );
     }
 
     if ( !pfnSetProcessAffinityMask )
@@ -1035,7 +1037,7 @@ bool wxThread::SetConcurrency(size_t WXUNUSED_IN_WINCE(level))
 
     if ( pfnSetProcessAffinityMask(hProcess, dwProcMask) == 0 )
     {
-        wxLogLastError(_T("SetProcessAffinityMask"));
+        wxLogLastError(wxT("SetProcessAffinityMask"));
 
         return false;
     }
@@ -1108,12 +1110,12 @@ wxThreadError wxThread::Resume()
 
 wxThread::ExitCode wxThread::Wait()
 {
+    ExitCode rc = wxUIntToPtr(THREAD_ERROR_EXIT);
+
     // although under Windows we can wait for any thread, it's an error to
     // wait for a detached one in wxWin API
-    wxCHECK_MSG( !IsDetached(), (ExitCode)-1,
-                 _T("wxThread::Wait(): can't wait for detached thread") );
-
-    ExitCode rc = (ExitCode)-1;
+    wxCHECK_MSG( !IsDetached(), rc,
+                 wxT("wxThread::Wait(): can't wait for detached thread") );
 
     (void)m_internal->WaitForTerminate(m_critsect, &rc);
 
@@ -1162,9 +1164,9 @@ void wxThread::Exit(ExitCode status)
     }
 
 #ifdef wxUSE_BEGIN_THREAD
-    _endthreadex((unsigned)status);
+    _endthreadex(wxPtrToUInt(status));
 #else // !VC++
-    ::ExitThread((DWORD)status);
+    ::ExitThread(wxPtrToUInt(status));
 #endif // VC++/!VC++
 
     wxFAIL_MSG(wxT("Couldn't return from ExitThread()!"));
@@ -1260,7 +1262,7 @@ bool wxThreadModule::OnInit()
         ::TlsFree(gs_tlsThisThread);
         gs_tlsThisThread = 0xFFFFFFFF;
 
-        wxLogSysError(_("Thread module initialization failed: can not store value in thread local storage"));
+        wxLogSysError(_("Thread module initialization failed: cannot store value in thread local storage"));
 
         return false;
     }

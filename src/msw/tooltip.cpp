@@ -106,7 +106,7 @@ public:
             uFlags |= TTF_TRANSPARENT;
         }
 
-        uId = (UINT)hwndOwner;
+        uId = (UINT_PTR)hwndOwner;
     }
 };
 

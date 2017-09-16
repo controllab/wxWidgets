@@ -581,21 +581,4 @@ public:
     ~wxWindowCreationHook();
 };
 
-// ----------------------------------------------------------------------------
-// global objects
-// ----------------------------------------------------------------------------
-
-// notice that this hash must be defined after wxWindow declaration as it
-// needs to "see" its dtor and not just forward declaration
-#include "wx/hash.h"
-
-// pseudo-template HWND <-> wxWindow hash table
-#if WXWIN_COMPATIBILITY_2_4
-WX_DECLARE_HASH(wxWindow, wxWindowList, wxWinHashTable);
-#else
-WX_DECLARE_HASH(wxWindowMSW, wxWindowList, wxWinHashTable);
-#endif
-
-extern wxWinHashTable *wxWinHandleHash;
-
 #endif // _WX_WINDOW_H_

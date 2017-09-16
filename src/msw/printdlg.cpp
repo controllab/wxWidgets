@@ -175,12 +175,11 @@ wxWindowsPrintNativeData::wxWindowsPrintNativeData()
 
 wxWindowsPrintNativeData::~wxWindowsPrintNativeData()
 {
-    HGLOBAL hDevMode = (HGLOBAL)(DWORD) m_devMode;
-    if ( hDevMode )
-        GlobalFree(hDevMode);
-    HGLOBAL hDevNames = (HGLOBAL)(DWORD) m_devNames;
-    if ( hDevNames )
-        GlobalFree(hDevNames);
+    if ( m_devMode )
+        ::GlobalFree(static_cast<HGLOBAL>(m_devMode));
+
+    if ( m_devNames )
+        ::GlobalFree(static_cast<HGLOBAL>(m_devNames));
 }
 
 bool wxWindowsPrintNativeData::IsOk() const
@@ -190,10 +189,9 @@ bool wxWindowsPrintNativeData::IsOk() const
 
 bool wxWindowsPrintNativeData::TransferTo( wxPrintData &data )
 {
-    HGLOBAL hDevMode = (HGLOBAL)(DWORD) m_devMode;
-    HGLOBAL hDevNames = (HGLOBAL)(DWORD) m_devNames;
-
-    if (!hDevMode)
+   	HGLOBAL hDevMode = static_cast<HGLOBAL>(m_devMode);
+   	HGLOBAL hDevNames = static_cast<HGLOBAL>(m_devNames);
+    if (!m_devMode)
     {
         return false;
     }
@@ -396,8 +394,8 @@ bool wxWindowsPrintNativeData::TransferTo( wxPrintData &data )
 
 bool wxWindowsPrintNativeData::TransferFrom( const wxPrintData &data )
 {
-    HGLOBAL hDevMode = (HGLOBAL)(DWORD) m_devMode;
-    HGLOBAL hDevNames = (HGLOBAL)(DWORD) m_devNames;
+   	HGLOBAL hDevMode = static_cast<HGLOBAL>(m_devMode);
+   	HGLOBAL hDevNames = static_cast<HGLOBAL>(m_devNames);
     WinPrinter printer;
     LPTSTR szPrinterName = (LPTSTR)data.GetPrinterName().wx_str();
 
@@ -493,7 +491,7 @@ bool wxWindowsPrintNativeData::TransferFrom( const wxPrintData &data )
         else
         {
             hDevMode = pd.hDevMode;
-            m_devMode = (void*)(long) hDevMode;
+            m_devMode = pd.hDevMode;
             pd.hDevMode = NULL;
 
             // We'll create a new DEVNAMEs structure below.
@@ -688,7 +686,7 @@ bool wxWindowsPrintNativeData::TransferFrom( const wxPrintData &data )
     }
 
     // TODO: I hope it's OK to pass some empty strings to DEVNAMES.
-    m_devNames = (void*) (long) wxCreateDevNames(wxEmptyString, data.GetPrinterName(), wxEmptyString);
+    m_devNames = wxCreateDevNames(wxEmptyString, data.GetPrinterName(), wxEmptyString);
 
     return true;
 }
@@ -820,13 +818,13 @@ bool wxWindowsPrintDialog::ConvertToNative( wxPrintDialogData &data )
     if (pd->hDevNames)
         GlobalFree(pd->hDevNames);
 
-    pd->hDevMode = (HGLOBAL)(DWORD) native_data->GetDevMode();
+    pd->hDevMode = static_cast<HGLOBAL>(native_data->GetDevMode());
     native_data->SetDevMode( (void*) NULL);
 
     // Shouldn't assert; we should be able to test Ok-ness at a higher level
     //wxASSERT_MSG( (pd->hDevMode), wxT("hDevMode must be non-NULL in ConvertToNative!"));
 
-    pd->hDevNames = (HGLOBAL)(DWORD) native_data->GetDevNames();
+    pd->hDevNames = static_cast<HGLOBAL>(native_data->GetDevNames());
     native_data->SetDevNames( (void*) NULL);
 
 
@@ -896,10 +894,9 @@ bool wxWindowsPrintDialog::ConvertFromNative( wxPrintDialogData &data )
     {
         if (native_data->GetDevMode())
         {
-            // Make sure we don't leak memory
-            GlobalFree( (HGLOBAL)(DWORD) native_data->GetDevMode() );
+            ::GlobalFree(static_cast<HGLOBAL>(native_data->GetDevMode()));
         }
-        native_data->SetDevMode( (void*)(long) pd->hDevMode );
+        native_data->SetDevMode(pd->hDevMode);
         pd->hDevMode = NULL;
     }
 
@@ -908,10 +905,9 @@ bool wxWindowsPrintDialog::ConvertFromNative( wxPrintDialogData &data )
     {
         if (native_data->GetDevNames())
         {
-            // Make sure we don't leak memory
-            GlobalFree((HGLOBAL)(DWORD) native_data->GetDevNames());
+            ::GlobalFree(static_cast<HGLOBAL>(native_data->GetDevNames()));
         }
-        native_data->SetDevNames((void*)(long) pd->hDevNames);
+        native_data->SetDevNames(pd->hDevNames);
         pd->hDevNames = NULL;
     }
 

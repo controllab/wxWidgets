@@ -319,7 +319,7 @@ WXHDC WXDLLEXPORT wxGetPrinterDC(const wxPrintData& printDataConst)
     }
 
 
-    HGLOBAL hDevMode = (HGLOBAL)(DWORD) data->GetDevMode();
+    HGLOBAL hDevMode = (HGLOBAL) data->GetDevMode();
 
     DEVMODE *lpDevMode = hDevMode ? (DEVMODE *)::GlobalLock(hDevMode) : NULL;
 

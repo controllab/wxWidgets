@@ -57,6 +57,7 @@
     #include "wx/ownerdrw.h"
 #endif
 
+#include "wx/hashmap.h"
 #include "wx/evtloop.h"
 #include "wx/power.h"
 #include "wx/sysopt.h"
@@ -180,6 +181,12 @@ static struct MouseEventInfoDummy
 } gs_lastMouseEvent;
 #endif // wxUSE_MOUSEEVENT_HACK
 
+// hash containing all our windows, it uses HWND keys and wxWindow* values
+WX_DECLARE_HASH_MAP(HWND, wxWindow *,
+                    wxPointerHash, wxPointerEqual,
+                    WindowHandles);
+
+WindowHandles gs_windowHandles;
 // ---------------------------------------------------------------------------
 // private functions
 // ---------------------------------------------------------------------------
@@ -195,7 +202,6 @@ LRESULT WXDLLEXPORT APIENTRY _EXPORT wxWndProc(HWND hWnd, UINT message,
 
 void wxRemoveHandleAssociation(wxWindowMSW *win);
 extern void wxAssociateWinWithHandle(HWND hWnd, wxWindowMSW *win);
-wxWindow *wxFindWinFromHandle(WXHWND hWnd);
 
 // get the text metrics for the current font
 static TEXTMETRIC wxGetTextMetrics(const wxWindowMSW *win);
@@ -793,7 +799,7 @@ void wxWindowMSW::DoReleaseMouse()
 /* static */ wxWindow *wxWindowBase::GetCapture()
 {
     HWND hwnd = ::GetCapture();
-    return hwnd ? wxFindWinFromHandle((WXHWND)hwnd) : (wxWindow *)NULL;
+    return hwnd ? wxFindWinFromHandle(hwnd) : NULL;
 }
 
 bool wxWindowMSW::SetFont(const wxFont& font)
@@ -2341,7 +2347,7 @@ bool wxWindowMSW::MSWProcessMessage(WXMSG* pMsg)
                             if ( (style & BS_OWNERDRAW) == BS_OWNERDRAW )
                             {
                                 // emulate the button click
-                                btn = wxFindWinFromHandle((WXHWND)msg->hwnd);
+                                btn = wxFindWinFromHandle(msg->hwnd);
                             }
 
                             bProcess = false;
@@ -2596,7 +2602,7 @@ LRESULT WXDLLEXPORT APIENTRY _EXPORT wxWndProc(HWND hWnd, UINT message, WPARAM w
                wxGetMessageName(message), (long)hWnd, (long)wParam, lParam);
 #endif // __WXDEBUG__
 
-    wxWindowMSW *wnd = wxFindWinFromHandle((WXHWND) hWnd);
+    wxWindowMSW *wnd = wxFindWinFromHandle(hWnd);
 
     // when we get the first message for the HWND we just created, we associate
     // it with wxWindow stored in gs_winBeingCreated
@@ -2720,11 +2726,11 @@ WXLRESULT wxWindowMSW::MSWWindowProc(WXUINT message, WXWPARAM wParam, WXLPARAM l
             break;
 
         case WM_SETFOCUS:
-            processed = HandleSetFocus((WXHWND)(HWND)wParam);
+            processed = HandleSetFocus((WXHWND)wParam);
             break;
 
         case WM_KILLFOCUS:
-            processed = HandleKillFocus((WXHWND)(HWND)wParam);
+            processed = HandleKillFocus((WXHWND)wParam);
             break;
 
         case WM_PRINTCLIENT:
@@ -3144,11 +3150,11 @@ WXLRESULT wxWindowMSW::MSWWindowProc(WXUINT message, WXWPARAM wParam, WXLPARAM l
 #endif
 
         case WM_PALETTECHANGED:
-            processed = HandlePaletteChanged((WXHWND) (HWND) wParam);
+            processed = HandlePaletteChanged((WXHWND) wParam);
             break;
 
         case WM_CAPTURECHANGED:
-            processed = HandleCaptureChanged((WXHWND) (HWND) lParam);
+            processed = HandleCaptureChanged((WXHWND) lParam);
             break;
 
         case WM_SETTINGCHANGE:
@@ -3175,7 +3181,7 @@ WXLRESULT wxWindowMSW::MSWWindowProc(WXUINT message, WXWPARAM wParam, WXLPARAM l
 #endif
 
         case WM_INITDIALOG:
-            processed = HandleInitDialog((WXHWND)(HWND)wParam);
+            processed = HandleInitDialog((WXHWND)wParam);
 
             if ( processed )
             {
@@ -3199,7 +3205,7 @@ WXLRESULT wxWindowMSW::MSWWindowProc(WXUINT message, WXWPARAM wParam, WXLPARAM l
 #endif
 
         case WM_SETCURSOR:
-            processed = HandleSetCursor((WXHWND)(HWND)wParam,
+            processed = HandleSetCursor((WXHWND)wParam,
                                         LOWORD(lParam),     // hit test
                                         HIWORD(lParam));    // mouse msg
 
@@ -3430,38 +3436,44 @@ WXLRESULT wxWindowMSW::MSWWindowProc(WXUINT message, WXWPARAM wParam, WXLPARAM l
 // wxWindow <-> HWND map
 // ----------------------------------------------------------------------------
 
-wxWinHashTable *wxWinHandleHash = NULL;
-
-wxWindow *wxFindWinFromHandle(WXHWND hWnd)
+wxWindow *wxFindWinFromHandle(HWND hwnd)
 {
-    return (wxWindow*)wxWinHandleHash->Get((long)hWnd);
+    WindowHandles::const_iterator i = gs_windowHandles.find(hwnd);
+    return i == gs_windowHandles.end() ? NULL : i->second;
 }
 
-void wxAssociateWinWithHandle(HWND hWnd, wxWindowMSW *win)
+void wxAssociateWinWithHandle(HWND hwnd, wxWindowMSW *win)
 {
-    // adding NULL hWnd is (first) surely a result of an error and
+    // adding NULL hwnd is (first) surely a result of an error and
     // (secondly) breaks menu command processing
-    wxCHECK_RET( hWnd != (HWND)NULL,
-                 wxT("attempt to add a NULL hWnd to window list ignored") );
+    wxCHECK_RET( hwnd != (HWND)NULL,
+                 wxT("attempt to add a NULL hwnd to window list ignored") );
 
-    wxWindow *oldWin = wxFindWinFromHandle((WXHWND) hWnd);
-#ifdef __WXDEBUG__
-    if ( oldWin && (oldWin != win) )
+#if wxDEBUG_LEVEL
+    WindowHandles::const_iterator i = gs_windowHandles.find(hwnd);
+    if ( i != gs_windowHandles.end() )
     {
-        wxLogDebug(wxT("HWND %X already associated with another window (%s)"),
-                   (int) hWnd, win->GetClassInfo()->GetClassName());
+        if ( i->second != win )
+        {
+            wxFAIL_MSG(
+                wxString::Format(
+                    wxT("HWND %p already associated with another window (%s)"),
+                    hwnd, win->GetClassInfo()->GetClassName()
+                )
+            );
+        }
+        //else: this actually happens currently because we associate the window
+        //      with its HWND during creation (if we create it) and also when
+        //      SubclassWin() is called later, this is ok
     }
-    else
-#endif // __WXDEBUG__
-    if (!oldWin)
-    {
-        wxWinHandleHash->Put((long)hWnd, (wxWindow *)win);
-    }
+#endif // wxDEBUG_LEVEL
+
+    gs_windowHandles[hwnd] = (wxWindow *)win;
 }
 
 void wxRemoveHandleAssociation(wxWindowMSW *win)
 {
-    wxWinHandleHash->Delete((long)win->GetHWND());
+    gs_windowHandles.erase(GetHwndOf(win));
 }
 
 // ----------------------------------------------------------------------------
@@ -3613,7 +3625,7 @@ bool wxWindowMSW::MSWCreate(const wxChar *wclass,
                         style,
                         x, y, w, h,
                         (HWND)MSWGetParent(),
-                        (HMENU)controlId,
+                        (HMENU)wxUIntToPtr(controlId),
                         wxGetInstance(),
                         NULL                        // no extra data
                        );
@@ -3643,7 +3655,7 @@ bool wxWindowMSW::HandleNotify(int idCtrl, WXLPARAM lParam, WXLPARAM *result)
 #ifndef __WXMICROWIN__
     LPNMHDR hdr = (LPNMHDR)lParam;
     HWND hWnd = hdr->hwndFrom;
-    wxWindow *win = wxFindWinFromHandle((WXHWND)hWnd);
+    wxWindow *win = wxFindWinFromHandle(hWnd);
 
     // if the control is one of our windows, let it handle the message itself
     if ( win )
@@ -5127,7 +5139,7 @@ static wxWindowMSW *FindWindowForMouseEvent(wxWindowMSW *win, int *x, int *y)
                 ::IsWindowVisible(hwndUnderMouse) &&
                     ::IsWindowEnabled(hwndUnderMouse) )
     {
-        wxWindow *winUnderMouse = wxFindWinFromHandle((WXHWND)hwndUnderMouse);
+        wxWindow *winUnderMouse = wxFindWinFromHandle(hwndUnderMouse);
         if ( winUnderMouse )
         {
             // translate the mouse coords to the other window coords
@@ -6072,7 +6084,7 @@ wxWindow *wxGetActiveWindow()
     HWND hWnd = GetActiveWindow();
     if ( hWnd != 0 )
     {
-        return wxFindWinFromHandle((WXHWND) hWnd);
+        return wxFindWinFromHandle(hWnd);
     }
     return NULL;
 }
@@ -6087,7 +6099,7 @@ extern wxWindow *wxGetWindowFromHWND(WXHWND hWnd)
     wxWindow *win = (wxWindow *)NULL;
     if ( hwnd )
     {
-        win = wxFindWinFromHandle((WXHWND)hwnd);
+        win = wxFindWinFromHandle(hwnd);
         if ( !win )
         {
 #if wxUSE_RADIOBOX
@@ -6131,7 +6143,7 @@ extern wxWindow *wxGetWindowFromHWND(WXHWND hWnd)
 #endif
 
         hwnd = ::GetParent(hwnd);
-        win = wxFindWinFromHandle((WXHWND)hwnd);
+        win = wxFindWinFromHandle(hwnd);
     }
 
     return win;

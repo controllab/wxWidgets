@@ -172,7 +172,7 @@ bool wxPen::RealizeResource()
            case wxSTIPPLE:
                logb.lbStyle = BS_PATTERN ;
                if (M_PENDATA->m_stipple.Ok())
-                   logb.lbHatch = (LONG)M_PENDATA->m_stipple.GetHBITMAP();
+                   logb.lbHatch = wxPtrToUInt(M_PENDATA->m_stipple.GetHBITMAP());
                else
                    logb.lbHatch = (LONG)0;
                break;
