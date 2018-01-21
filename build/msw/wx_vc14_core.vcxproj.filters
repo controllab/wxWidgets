@@ -867,6 +867,9 @@
     <ClCompile Include="..\..\src\univ\winuniv.cpp">
       <Filter>wxUniv Sources</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\common\modalhook.cpp">
+      <Filter>Common Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\src\msw\version.rc">

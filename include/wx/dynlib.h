@@ -118,6 +118,18 @@ enum wxPluginCategory
 #define wxDYNLIB_FUNCTION(type, name, dynlib) \
     type pfn ## name = (type)(dynlib).GetSymbol(wxT(#name))
 
+// a more convenient function replacing wxDYNLIB_FUNCTION above
+//
+// it uses the convention that the type of the function is its name suffixed
+// with "_t" but it doesn't define a variable but just assigns the loaded value
+// to it and also allows to pass it the prefix to be used instead of hardcoding
+// "pfn" (the prefix can be "m_" or "gs_pfn" or whatever)
+//
+// notice that this function doesn't generate error messages if the symbol
+// couldn't be loaded, the caller should generate the appropriate message
+#define wxDL_INIT_FUNC(pfx, name, dynlib) \
+    pfx ## name = (name ## _t)(dynlib).RawGetSymbol(wxT(#name))
+
 // ----------------------------------------------------------------------------
 // wxDynamicLibraryDetails: contains details about a loaded wxDynamicLibrary
 // ----------------------------------------------------------------------------

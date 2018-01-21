@@ -11522,6 +11522,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\src\common\modalhook.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\common\msgout.cpp"
 				>
 				<FileConfiguration

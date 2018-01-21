@@ -441,6 +441,62 @@ void wxDialogBase::SetEscapeId(int escapeId)
     m_escapeId = escapeId;
 }
 
+wxWindow *wxDialogBase::CheckIfCanBeUsedAsParent(wxWindow *parent) const
+{
+	if (!parent)
+		return NULL;
+
+	extern WXDLLIMPEXP_DATA_BASE(wxList) wxPendingDelete;
+	if (wxPendingDelete.Member(parent) || parent->IsBeingDeleted())
+	{
+		// this window is being deleted and we shouldn't create any children
+		// under it
+		return NULL;
+	}
+
+	if (!parent->IsShownOnScreen())
+	{
+		// using hidden parent won't work correctly neither
+		return NULL;
+	}
+
+	// FIXME-VC6: this compiler requires an explicit const cast or it fails
+	//            with error C2446
+	if (const_cast<const wxWindow *>(parent) == this)
+	{
+		// not sure if this can really happen but it doesn't hurt to guard
+		// against this clearly invalid situation
+		return NULL;
+	}
+
+	return parent;
+}
+
+wxWindow *
+wxDialogBase::GetParentForModalDialog(wxWindow *parent, long style) const
+{
+	// creating a parent-less modal dialog will result (under e.g. wxGTK2)
+	// in an unfocused dialog, so try to find a valid parent for it unless we
+	// were explicitly asked not to
+	if (style & wxDIALOG_NO_PARENT)
+		return NULL;
+
+	// first try the given parent
+	if (parent)
+		parent = CheckIfCanBeUsedAsParent(wxGetTopLevelParent(parent));
+
+	// then the currently active window
+	if (!parent)
+		parent = CheckIfCanBeUsedAsParent(
+			wxGetTopLevelParent(wxGetActiveWindow()));
+
+	// and finally the application main window
+	if (!parent)
+		parent = CheckIfCanBeUsedAsParent(wxTheApp->GetTopWindow());
+
+	return parent;
+}
+
 bool wxDialogBase::EmulateButtonClickIfPresent(int id)
 {
 #if wxUSE_BUTTON

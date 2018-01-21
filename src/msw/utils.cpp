@@ -1276,7 +1276,28 @@ wxWinVersion wxGetWinVersion()
                     break;
 
                 case 6:
-                    return wxWinVersion_NT6;
+                    switch ( verMin )
+                    {
+                        case 0:
+                            return wxWinVersion_Vista;
+
+                        case 1:
+                            return wxWinVersion_7;
+
+                        case 2:
+                            return wxWinVersion_8;
+
+                        case 3:
+                            // For now, map to wxWinVersion_8. In case program
+                            // does not have a manifest indicating 8.1 or 10
+                            // support, Windows already performs this mapping
+                            // for us.
+                            return wxWinVersion_8;
+                    }
+                    break;
+
+                case 10:
+                    return wxWinVersion_8;
             }
             break;
 
