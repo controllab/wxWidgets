@@ -133,6 +133,7 @@
   <PropertyGroup Label="Globals">
     <ProjectName>wxpng</ProjectName>
     <ProjectGuid>{2465E379-613B-47F8-9EA1-B10330FB7119}</ProjectGuid>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Universal Release|Win32'" Label="Configuration">
@@ -462,6 +463,30 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Universal Release|Win32'">.\..\..\lib\vc_lib\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Universal Release|Win32'">.\vc_mswuniv\wxpng\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <AdditionalOptions>/EHsc  %(AdditionalOptions)</AdditionalOptions>
@@ -501,7 +526,7 @@
       <PrecompiledHeaderOutputFile>.\vc_mswd\wxpng/wx_wxpng.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\vc_mswd\wxpng/</AssemblerListingLocation>
       <ObjectFileName>.\vc_mswd\wxpng/</ObjectFileName>
-      <ProgramDataBaseFileName>..\..\lib\vc_lib\wxpngd.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>..\..\lib\vc_x64_lib\wxpngd.pdb</ProgramDataBaseFileName>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
@@ -680,7 +705,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>..\..\lib\vc_dll\wxpng.lib</OutputFile>
+      <OutputFile>..\..\lib\vc_x64_dll\wxpng.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
     <Bscmake>
@@ -738,7 +763,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>..\..\lib\vc_dll\wxpng.lib</OutputFile>
+      <OutputFile>..\..\lib\vc_x64_dll\wxpng.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
     <Bscmake>
@@ -1019,7 +1044,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>..\..\lib\vc_dll\wxpngd.lib</OutputFile>
+      <OutputFile>..\..\lib\vc_x64_dll\wxpngd.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
     <Bscmake>
@@ -1070,7 +1095,7 @@
       <PrecompiledHeaderOutputFile>.\vc_msw\wxpng/wx_wxpng.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\vc_msw\wxpng/</AssemblerListingLocation>
       <ObjectFileName>.\vc_msw\wxpng/</ObjectFileName>
-      <ProgramDataBaseFileName>..\..\lib\vc_lib\wxpng.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>..\..\lib\vc_x64_lib\wxpng.pdb</ProgramDataBaseFileName>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </ClCompile>
     <ResourceCompile>
@@ -1300,7 +1325,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>..\..\lib\vc_dll\wxpngd.lib</OutputFile>
+      <OutputFile>..\..\lib\vc_x64_dll\wxpngd.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
     <Bscmake>

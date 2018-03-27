@@ -133,6 +133,7 @@
   <PropertyGroup Label="Globals">
     <ProjectName>aui</ProjectName>
     <ProjectGuid>{F1775A45-B065-4212-B09B-1FC1EE311CB0}</ProjectGuid>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Universal Release|Win32'" Label="Configuration">
@@ -493,6 +494,30 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='DLL Universal Release|Win32'">.\vc_mswunivdll\aui\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DLL Universal Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DLL Universal Release|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DLL Universal Debug|Win32'">
     <Midl>
@@ -895,7 +920,7 @@
     <ClCompile>
       <AdditionalOptions>/EHsc  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\lib\vc_dll\mswd;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\lib\vc_x64_dll\mswd;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_USRDLL;DLL_EXPORTS;_DEBUG;__WXMSW__;__WXDEBUG__;WXBUILDING;WXUSINGDLL;WXMAKINGDLL_AUI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -915,10 +940,10 @@
       <AdditionalIncludeDirectories>..\..\lib\vc_dll\mswd;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>wxtiffd.lib;wxjpegd.lib;wxpngd.lib;wxzlibd.lib;wxregexd.lib;wxexpatd.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;..\..\lib\vc_dll\wxmsw28d_adv.lib;..\..\lib\vc_dll\wxmsw28d_core.lib;..\..\lib\vc_dll\wxbase28d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\..\lib\vc_dll\wxmsw28d_aui_vc_custom.dll</OutputFile>
+      <AdditionalDependencies>wxtiffd.lib;wxjpegd.lib;wxpngd.lib;wxzlibd.lib;wxregexd.lib;wxexpatd.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;..\..\lib\vc_x64_dll\wxmsw28d_adv.lib;..\..\lib\vc_x64_dll\wxmsw28d_core.lib;..\..\lib\vc_x64_dll\wxbase28d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\..\lib\vc_x64_dll\wxmsw28d_aui_vc_custom.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\..\lib\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>..\..\lib\vc_dll\wxmsw28d_aui_vc_custom.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib\vc_dll\wxmsw28d_aui.lib</ImportLibrary>
@@ -989,7 +1014,7 @@
       <AdditionalOptions>/EHsc  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..\lib\vc_dll\msw;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\lib\vc_x64_dll\msw;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_USRDLL;DLL_EXPORTS;__WXMSW__;NDEBUG;WXBUILDING;WXUSINGDLL;WXMAKINGDLL_AUI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -1010,10 +1035,10 @@
       <AdditionalIncludeDirectories>..\..\lib\vc_dll\msw;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>wxtiff.lib;wxjpeg.lib;wxpng.lib;wxzlib.lib;wxregex.lib;wxexpat.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;..\..\lib\vc_dll\wxmsw28_adv.lib;..\..\lib\vc_dll\wxmsw28_core.lib;..\..\lib\vc_dll\wxbase28.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\..\lib\vc_dll\wxmsw28_aui_vc_custom.dll</OutputFile>
+      <AdditionalDependencies>wxtiff.lib;wxjpeg.lib;wxpng.lib;wxzlib.lib;wxregex.lib;wxexpat.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;..\..\lib\vc_x64_dll\wxmsw28_adv.lib;..\..\lib\vc_x64_dll\wxmsw28_core.lib;..\..\lib\vc_x64_dll\wxbase28.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\..\lib\vc_x64_dll\wxmsw28_aui_vc_custom.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\..\lib\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>..\..\lib\vc_dll\wxmsw28_aui_vc_custom.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib\vc_dll\wxmsw28_aui.lib</ImportLibrary>
     </Link>
@@ -1102,10 +1127,10 @@
       <AdditionalIncludeDirectories>..\..\lib\vc_dll\mswud;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>wxtiffd.lib;wxjpegd.lib;wxpngd.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;..\..\lib\vc_dll\wxmsw28ud_adv.lib;..\..\lib\vc_dll\wxmsw28ud_core.lib;..\..\lib\vc_dll\wxbase28ud.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\..\lib\vc_dll\wxmsw28ud_aui_vc_custom.dll</OutputFile>
+      <AdditionalDependencies>wxtiffd.lib;wxjpegd.lib;wxpngd.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;..\..\lib\vc_x64_dll\wxmsw28ud_adv.lib;..\..\lib\vc_x64_dll\wxmsw28ud_core.lib;..\..\lib\vc_x64_dll\wxbase28ud.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\..\lib\vc_x64_dll\wxmsw28ud_aui_vc_custom.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\..\lib\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>..\..\lib\vc_dll\wxmsw28ud_aui_vc_custom.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib\vc_dll\wxmsw28ud_aui.lib</ImportLibrary>
@@ -1258,10 +1283,10 @@
       <AdditionalIncludeDirectories>..\..\lib\vc_dll\mswu;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>wxtiff.lib;wxjpeg.lib;wxpng.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;..\..\lib\vc_dll\wxmsw28u_adv.lib;..\..\lib\vc_dll\wxmsw28u_core.lib;..\..\lib\vc_dll\wxbase28u.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\..\lib\vc_dll\wxmsw28u_aui_vc_custom.dll</OutputFile>
+      <AdditionalDependencies>wxtiff.lib;wxjpeg.lib;wxpng.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;..\..\lib\vc_x64_dll\wxmsw28u_adv.lib;..\..\lib\vc_x64_dll\wxmsw28u_core.lib;..\..\lib\vc_x64_dll\wxbase28u.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\..\lib\vc_x64_dll\wxmsw28u_aui_vc_custom.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\..\lib\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>..\..\lib\vc_dll\wxmsw28u_aui_vc_custom.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib\vc_dll\wxmsw28u_aui.lib</ImportLibrary>
     </Link>
@@ -1430,7 +1455,7 @@
     <ClCompile>
       <AdditionalOptions>/EHsc  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\lib\vc_lib\mswd;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\lib\vc_x64_lib\mswd;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_LIB;_DEBUG;__WXMSW__;__WXDEBUG__;WXBUILDING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -1439,7 +1464,7 @@
       <PrecompiledHeaderOutputFile>vc_mswd\wxprec_auilib.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\vc_mswd\aui/</AssemblerListingLocation>
       <ObjectFileName>.\vc_mswd\aui/</ObjectFileName>
-      <ProgramDataBaseFileName>..\..\lib\vc_lib\wxmsw28d_aui.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>..\..\lib\vc_x64_lib\wxmsw28d_aui.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level4</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -1621,7 +1646,7 @@
       <AdditionalOptions>/EHsc  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..\lib\vc_lib\msw;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\lib\vc_x64_lib\msw;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_LIB;__WXMSW__;NDEBUG;WXBUILDING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -1632,7 +1657,7 @@
       <PrecompiledHeaderOutputFile>vc_msw\wxprec_auilib.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\vc_msw\aui/</AssemblerListingLocation>
       <ObjectFileName>.\vc_msw\aui/</ObjectFileName>
-      <ProgramDataBaseFileName>..\..\lib\vc_lib\wxmsw28_aui.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>..\..\lib\vc_x64_lib\wxmsw28_aui.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level4</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </ClCompile>

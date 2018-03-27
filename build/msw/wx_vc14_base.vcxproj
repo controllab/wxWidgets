@@ -133,6 +133,7 @@
   <PropertyGroup Label="Globals">
     <ProjectName>base</ProjectName>
     <ProjectGuid>{17824F61-7A4C-4745-BCB6-4CEFAF149085}</ProjectGuid>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Universal Unicode Release|Win32'" Label="Configuration">
@@ -493,6 +494,30 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='DLL Universal Unicode Release|Win32'">.\vc_mswunivudll\base\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DLL Universal Unicode Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DLL Universal Unicode Release|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DLL Universal Unicode Debug|Win32'">
     <Midl>
@@ -895,7 +920,7 @@
       <AdditionalOptions>/EHsc  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..\lib\vc_dll\msw;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\lib\vc_x64_dll\msw;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_USRDLL;DLL_EXPORTS;__WXMSW__;NDEBUG;WXBUILDING;wxUSE_GUI=0;WXMAKINGDLL_BASE;wxUSE_BASE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -917,9 +942,9 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>wxzlib.lib;wxregex.lib;wxexpat.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\..\lib\vc_dll\wxbase28_vc_custom.dll</OutputFile>
+      <OutputFile>..\..\lib\v_x64_dll\wxbase28_vc_custom.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\..\lib\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>..\..\lib\vc_dll\wxbase28_vc_custom.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib\vc_dll\wxbase28.lib</ImportLibrary>
     </Link>
@@ -965,7 +990,7 @@
       <AdditionalOptions>/EHsc  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..\lib\vc_lib\msw;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\lib\vc_x64_lib\msw;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_LIB;__WXMSW__;NDEBUG;WXBUILDING;wxUSE_GUI=0;wxUSE_BASE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -976,7 +1001,7 @@
       <PrecompiledHeaderOutputFile>vc_msw\wxprec_baselib.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\vc_msw\base/</AssemblerListingLocation>
       <ObjectFileName>.\vc_msw\base/</ObjectFileName>
-      <ProgramDataBaseFileName>..\..\lib\vc_lib\wxbase28.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>..\..\lib\vc_x64_lib\wxbase28.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level4</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </ClCompile>
@@ -1367,7 +1392,7 @@
     <ClCompile>
       <AdditionalOptions>/EHsc  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\lib\vc_dll\mswd;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\lib\vc_x64_dll\mswd;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_USRDLL;DLL_EXPORTS;_DEBUG;__WXMSW__;__WXDEBUG__;WXBUILDING;wxUSE_GUI=0;WXMAKINGDLL_BASE;wxUSE_BASE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -1388,9 +1413,9 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>wxzlibd.lib;wxregexd.lib;wxexpatd.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\..\lib\vc_dll\wxbase28d_vc_custom.dll</OutputFile>
+      <OutputFile>..\..\lib\vc_x64_dll\wxbase28d_vc_custom.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\..\lib\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>..\..\lib\vc_dll\wxbase28d_vc_custom.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib\vc_dll\wxbase28d.lib</ImportLibrary>
@@ -1483,9 +1508,9 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>wxzlib.lib;wxregexu.lib;wxexpat.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\..\lib\vc_dll\wxbase28u_vc_custom.dll</OutputFile>
+      <OutputFile>..\..\lib\vc_x64_dll\wxbase28u_vc_custom.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\..\lib\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>..\..\lib\vc_dll\wxbase28u_vc_custom.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib\vc_dll\wxbase28u.lib</ImportLibrary>
     </Link>
@@ -1529,7 +1554,7 @@
     <ClCompile>
       <AdditionalOptions>/EHsc  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\lib\vc_lib\mswd;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\lib\vc_x64_lib\mswd;..\..\include;..\..\src\tiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_LIB;_DEBUG;__WXMSW__;__WXDEBUG__;WXBUILDING;wxUSE_GUI=0;wxUSE_BASE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -1538,7 +1563,7 @@
       <PrecompiledHeaderOutputFile>vc_mswd\wxprec_baselib.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\vc_mswd\base/</AssemblerListingLocation>
       <ObjectFileName>.\vc_mswd\base/</ObjectFileName>
-      <ProgramDataBaseFileName>..\..\lib\vc_lib\wxbase28d.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>..\..\lib\vc_x64_lib\wxbase28d.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level4</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -1636,9 +1661,9 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>wxzlibd.lib;wxregexud.lib;wxexpatd.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\..\lib\vc_dll\wxbase28ud_vc_custom.dll</OutputFile>
+      <OutputFile>..\..\lib\vc_x64_dll\wxbase28ud_vc_custom.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\..\lib\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>..\..\lib\vc_dll\wxbase28ud_vc_custom.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib\vc_dll\wxbase28ud.lib</ImportLibrary>
@@ -7851,53 +7876,53 @@
     </CustomBuild>
     <CustomBuild Include="..\..\include\wx\msw\setup.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">Creating ..\..\lib\vc_dll\mswd\wx\setup.h</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='DLL Debug|x64'">Creating ..\..\lib\vc_dll\mswd\wx\setup.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DLL Debug|x64'">Creating ..\..\lib\vc_x64_dll\mswd\wx\setup.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">copy "%(FullPath)" ..\..\lib\vc_dll\mswd\wx\setup.h
 </Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='DLL Debug|x64'">copy "%(FullPath)" ..\..\lib\vc_dll\mswd\wx\setup.h
+      <Command Condition="'$(Configuration)|$(Platform)'=='DLL Debug|x64'">copy "%(FullPath)" ..\..\lib\vc_x64_dll\mswd\wx\setup.h
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">..\..\lib\vc_dll\mswd\wx\setup.h;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='DLL Debug|x64'">..\..\lib\vc_dll\mswd\wx\setup.h;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DLL Debug|x64'">..\..\lib\vc_x64_dll\mswd\wx\setup.h;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='DLL Release|Win32'">Creating ..\..\lib\vc_dll\msw\wx\setup.h</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='DLL Release|x64'">Creating ..\..\lib\vc_dll\msw\wx\setup.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DLL Release|x64'">Creating ..\..\lib\vc_x64_dll\msw\wx\setup.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='DLL Release|Win32'">copy "%(FullPath)" ..\..\lib\vc_dll\msw\wx\setup.h
 </Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='DLL Release|x64'">copy "%(FullPath)" ..\..\lib\vc_dll\msw\wx\setup.h
+      <Command Condition="'$(Configuration)|$(Platform)'=='DLL Release|x64'">copy "%(FullPath)" ..\..\lib\vc_x64_dll\msw\wx\setup.h
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='DLL Release|Win32'">..\..\lib\vc_dll\msw\wx\setup.h;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='DLL Release|x64'">..\..\lib\vc_dll\msw\wx\setup.h;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DLL Release|x64'">..\..\lib\vc_x64_dll\msw\wx\setup.h;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Debug|Win32'">Creating ..\..\lib\vc_dll\mswud\wx\setup.h</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Debug|x64'">Creating ..\..\lib\vc_dll\mswud\wx\setup.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Debug|x64'">Creating ..\..\lib\vc_x64_dll\mswud\wx\setup.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Debug|Win32'">copy "%(FullPath)" ..\..\lib\vc_dll\mswud\wx\setup.h
 </Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Debug|x64'">copy "%(FullPath)" ..\..\lib\vc_dll\mswud\wx\setup.h
+      <Command Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Debug|x64'">copy "%(FullPath)" ..\..\lib\vc_x64_dll\mswud\wx\setup.h
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Debug|Win32'">..\..\lib\vc_dll\mswud\wx\setup.h;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Debug|x64'">..\..\lib\vc_dll\mswud\wx\setup.h;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Debug|x64'">..\..\lib\vc_x64_dll\mswud\wx\setup.h;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|Win32'">Creating ..\..\lib\vc_dll\mswu\wx\setup.h</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|x64'">Creating ..\..\lib\vc_dll\mswu\wx\setup.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|x64'">Creating ..\..\lib\vc_x64_dll\mswu\wx\setup.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|Win32'">copy "%(FullPath)" ..\..\lib\vc_dll\mswu\wx\setup.h
 </Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|x64'">copy "%(FullPath)" ..\..\lib\vc_dll\mswu\wx\setup.h
+      <Command Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|x64'">copy "%(FullPath)" ..\..\lib\vc_x64_dll\mswu\wx\setup.h
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|Win32'">..\..\lib\vc_dll\mswu\wx\setup.h;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|x64'">..\..\lib\vc_dll\mswu\wx\setup.h;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|x64'">..\..\lib\vc_x64_dll\mswu\wx\setup.h;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Creating ..\..\lib\vc_lib\mswd\wx\setup.h</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Creating ..\..\lib\vc_lib\mswd\wx\setup.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Creating ..\..\lib\vc_x64_lib\mswd\wx\setup.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy "%(FullPath)" ..\..\lib\vc_lib\mswd\wx\setup.h
 </Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">copy "%(FullPath)" ..\..\lib\vc_lib\mswd\wx\setup.h
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">copy "%(FullPath)" ..\..\lib\vc_x64_lib\mswd\wx\setup.h
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\lib\vc_lib\mswd\wx\setup.h;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\lib\vc_lib\mswd\wx\setup.h;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\lib\vc_x64_lib\mswd\wx\setup.h;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Creating ..\..\lib\vc_lib\msw\wx\setup.h</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Creating ..\..\lib\vc_lib\msw\wx\setup.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Creating ..\..\lib\vc_x64_lib\msw\wx\setup.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy "%(FullPath)" ..\..\lib\vc_lib\msw\wx\setup.h
 </Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">copy "%(FullPath)" ..\..\lib\vc_lib\msw\wx\setup.h
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">copy "%(FullPath)" ..\..\lib\vc_x64_lib\msw\wx\setup.h
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\lib\vc_lib\msw\wx\setup.h;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\lib\vc_lib\msw\wx\setup.h;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\lib\vc_x64_lib\msw\wx\setup.h;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">Creating ..\..\lib\vc_lib\mswud\wx\setup.h</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">Creating ..\..\lib\vc_x64_lib\mswud\wx\setup.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">copy "%(FullPath)" ..\..\lib\vc_lib\mswud\wx\setup.h

@@ -133,6 +133,7 @@
   <PropertyGroup Label="Globals">
     <ProjectName>wxtiff</ProjectName>
     <ProjectGuid>{14AF090B-E9B3-4C1D-B3D6-68A15A719DE0}</ProjectGuid>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|Win32'" Label="Configuration">
@@ -461,6 +462,30 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">.\vc_mswu\wxtiff\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|Win32'">.\..\..\lib\vc_dll\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|Win32'">.\vc_mswudll\wxtiff\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Unicode Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Debug|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Release|x64'">
+    <OutDir>.\..\..\lib\vc_x64_dll\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">
     <ClCompile>
@@ -793,7 +818,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>..\..\lib\vc_dll\wxtiff.lib</OutputFile>
+      <OutputFile>..\..\lib\vc_x64_dll\wxtiff.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
     <Bscmake>
@@ -1066,7 +1091,7 @@
       <PrecompiledHeaderOutputFile>.\vc_mswd\wxtiff/wx_wxtiff.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\vc_mswd\wxtiff/</AssemblerListingLocation>
       <ObjectFileName>.\vc_mswd\wxtiff/</ObjectFileName>
-      <ProgramDataBaseFileName>..\..\lib\vc_lib\wxtiffd.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>..\..\lib\vc_x64_lib\wxtiffd.pdb</ProgramDataBaseFileName>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
@@ -1125,7 +1150,7 @@
       <PrecompiledHeaderOutputFile>.\vc_msw\wxtiff/wx_wxtiff.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\vc_msw\wxtiff/</AssemblerListingLocation>
       <ObjectFileName>.\vc_msw\wxtiff/</ObjectFileName>
-      <ProgramDataBaseFileName>..\..\lib\vc_lib\wxtiff.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>..\..\lib\vc_x64_lib\wxtiff.pdb</ProgramDataBaseFileName>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </ClCompile>
     <ResourceCompile>
@@ -1187,7 +1212,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>..\..\lib\vc_dll\wxtiffd.lib</OutputFile>
+      <OutputFile>..\..\lib\vc_x64_dll\wxtiffd.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
     <Bscmake>
@@ -1242,7 +1267,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>..\..\lib\vc_dll\wxtiffd.lib</OutputFile>
+      <OutputFile>..\..\lib\vc_x64_dll\wxtiffd.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
     <Bscmake>
@@ -1358,7 +1383,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>..\..\lib\vc_dll\wxtiff.lib</OutputFile>
+      <OutputFile>..\..\lib\vc_x64_dll\wxtiff.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
     <Bscmake>
