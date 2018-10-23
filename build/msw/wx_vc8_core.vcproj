@@ -209,10 +209,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\..\lib\vc_lib\mswu;..\..\include;..\..\src\tiff\libtiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib"
 				PreprocessorDefinitions="WIN32;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_NON_CONFORMING_SWPRINTFS=1;_SCL_SECURE_NO_WARNINGS=1;__WXMSW__;NDEBUG;_UNICODE;WXBUILDING;wxUSE_BASE=0"
 				ExceptionHandling="1"
 				RuntimeLibrary="0"
+				FloatingPointModel="0"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="wx/wxprec.h"
@@ -2000,10 +2002,6 @@
 			UniqueIdentifier="{63537534-1833-5C1F-8DBD-359A84F294C8}"
 			>
 			<File
-				RelativePath="..\..\include\wx\univ\setup.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\include\wx\msw\setup.h"
 				>
 				<FileConfiguration
@@ -2086,6 +2084,10 @@
 						Outputs="..\..\lib\vc_x64_dll\mswu\wx\setup.h"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\include\wx\univ\setup.h"
+				>
 			</File>
 		</Filter>
 		<Filter
@@ -3136,11 +3138,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\wx\ribbon\control.h"
+				RelativePath="..\..\include\wx\control.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\wx\control.h"
+				RelativePath="..\..\include\wx\ribbon\control.h"
 				>
 			</File>
 			<File
@@ -3600,11 +3602,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\wx\ribbon\panel.h"
+				RelativePath="..\..\include\wx\panel.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\wx\panel.h"
+				RelativePath="..\..\include\wx\ribbon\panel.h"
 				>
 			</File>
 			<File
@@ -3952,11 +3954,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\wx\toolbar.h"
+				RelativePath="..\..\include\wx\ribbon\toolbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\wx\ribbon\toolbar.h"
+				RelativePath="..\..\include\wx\toolbar.h"
 				>
 			</File>
 			<File
@@ -3980,11 +3982,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\wx\treebook.h"
+				RelativePath="..\..\include\wx\persist\treebook.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\wx\persist\treebook.h"
+				RelativePath="..\..\include\wx\treebook.h"
 				>
 			</File>
 			<File
@@ -4044,11 +4046,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\wx\window.h"
+				RelativePath="..\..\include\wx\persist\window.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\wx\persist\window.h"
+				RelativePath="..\..\include\wx\window.h"
 				>
 			</File>
 			<File

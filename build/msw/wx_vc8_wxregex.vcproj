@@ -203,10 +203,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\..\include;..\..\lib\vc_lib\mswu"
 				PreprocessorDefinitions="WIN32;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_NON_CONFORMING_SWPRINTFS=1;_SCL_SECURE_NO_WARNINGS=1;NDEBUG;_CRT_SECURE_NO_WARNINGS;__WXMSW__;_UNICODE"
 				ExceptionHandling="1"
 				RuntimeLibrary="0"
+				FloatingPointModel="0"
 				RuntimeTypeInfo="true"
 				ObjectFile="vc_mswu\wxregex\"
 				ProgramDataBaseFileName="..\..\lib\vc_lib\wxregexu.pdb"
@@ -760,10 +762,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\include\wx\univ\setup.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\include\wx\msw\setup.h"
 				>
 				<FileConfiguration
@@ -846,6 +844,10 @@
 						Outputs="..\..\lib\vc_x64_dll\mswu\wx\setup.h"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\include\wx\univ\setup.h"
+				>
 			</File>
 		</Filter>
 	</Files>
