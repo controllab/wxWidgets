@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.1"
+	Name="media"
+	ProjectGUID="{F30C98AD-5CE3-4582-A595-90A6212E4628}"
+	VCNestedProjectGUID="{3FCADF33-E2F4-5D9C-9300-A5995BDA9378}"
+	VCNestedProjectFileName="wx_vc8_media.vcproj">
+	<Configurations>
+		<Configuration
+			Name="Release|Win32">
+			<Tool
+				Name="CppCmplrTool"
+				FloatingPointSpeculation="0"
+				UseProcessorExtensions="1"
+				Parallelization="true"/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64">
+			<Tool
+				Name="CppCmplrTool"
+				Parallelization="true"/>
+		</Configuration>
+	</Configurations>
+	<Files/>
+</VisualStudioProject>

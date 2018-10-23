@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.1"
+	Name="stc"
+	ProjectGUID="{65DBB011-B4D3-4DBE-A2F3-AD4E71B635BD}"
+	VCNestedProjectGUID="{FA559111-7B08-54E7-BD3B-0B621C819C78}"
+	VCNestedProjectFileName="wx_vc8_stc.vcproj">
+	<Configurations>
+		<Configuration
+			Name="Release|Win32">
+			<Tool
+				Name="CppCmplrTool"
+				FloatingPointSpeculation="0"
+				UseProcessorExtensions="1"
+				Parallelization="true"/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64">
+			<Tool
+				Name="CppCmplrTool"
+				Parallelization="true"/>
+		</Configuration>
+	</Configurations>
+	<Files/>
+</VisualStudioProject>

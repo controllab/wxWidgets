@@ -431,3 +431,6 @@
 /utils/wxrc/*.sln
 /utils/wxrc/*.dsw
 /build/msw/.vs
+/build/msw/vc_mswu_x64
+/build/msw/vc_mswud_x64
+/build/msw/*.ncb

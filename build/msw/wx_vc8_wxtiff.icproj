@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.1"
+	Name="wxtiff"
+	ProjectGUID="{1F315F87-D3BB-45A6-B3AE-9EF899174AC2}"
+	VCNestedProjectGUID="{6C6028A1-9741-536A-A4CC-AD9D5A21EFE9}"
+	VCNestedProjectFileName="wx_vc8_wxtiff.vcproj">
+	<Configurations>
+		<Configuration
+			Name="Release|Win32">
+			<Tool
+				Name="CppCmplrTool"
+				FloatingPointSpeculation="0"
+				UseProcessorExtensions="1"
+				Parallelization="true"/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64">
+			<Tool
+				Name="CppCmplrTool"
+				Parallelization="true"/>
+		</Configuration>
+	</Configurations>
+	<Files/>
+</VisualStudioProject>

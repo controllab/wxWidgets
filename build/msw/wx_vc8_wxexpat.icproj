@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.1"
+	Name="wxexpat"
+	ProjectGUID="{7D566C85-0B59-4907-9625-94204E698E4B}"
+	VCNestedProjectGUID="{3E2CE61B-B4B7-5120-8EE3-65ECC0BE055E}"
+	VCNestedProjectFileName="wx_vc8_wxexpat.vcproj">
+	<Configurations>
+		<Configuration
+			Name="Release|Win32">
+			<Tool
+				Name="CppCmplrTool"
+				FloatingPointSpeculation="0"
+				UseProcessorExtensions="1"
+				Parallelization="true"/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64">
+			<Tool
+				Name="CppCmplrTool"
+				Parallelization="true"/>
+		</Configuration>
+	</Configurations>
+	<Files/>
+</VisualStudioProject>
