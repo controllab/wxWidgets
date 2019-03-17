@@ -14,7 +14,7 @@ dnl ---------------------------------------------------------------------------
 dnl initialization
 dnl ---------------------------------------------------------------------------
 
-AC_INIT([wxWidgets], [3.0.4], [wx-dev@lists.wxwidgets.org])
+AC_INIT([wxWidgets], [3.0.5], [wx-dev@lists.wxwidgets.org])
 
 dnl the file passed to AC_CONFIG_SRCDIR should be specific to our package
 AC_CONFIG_SRCDIR([wx-config.in])
@@ -40,7 +40,7 @@ dnl wx_release_number += 1
 
 wx_major_version_number=3
 wx_minor_version_number=0
-wx_release_number=4
+wx_release_number=5
 wx_subrelease_number=0
 
 WX_RELEASE=$wx_major_version_number.$wx_minor_version_number
@@ -990,7 +990,7 @@ WX_ARG_FEATURE(statusbar,   [  --enable-statusbar      use wxStatusBar class], w
 WX_ARG_FEATURE(taskbaricon, [  --enable-taskbaricon    use wxTaskBarIcon class], wxUSE_TASKBARICON)
 WX_ARG_FEATURE(tbarnative,  [  --enable-tbarnative     use native wxToolBar class], wxUSE_TOOLBAR_NATIVE)
 WX_ARG_FEATURE(textctrl,    [  --enable-textctrl       use wxTextCtrl class], wxUSE_TEXTCTRL)
-WX_ARG_FEATURE(datepick,    [  --enable-timepick       use wxTimePickerCtrl class], wxUSE_TIMEPICKCTRL)
+WX_ARG_FEATURE(timepick,    [  --enable-timepick       use wxTimePickerCtrl class], wxUSE_TIMEPICKCTRL)
 WX_ARG_FEATURE(tipwindow,   [  --enable-tipwindow      use wxTipWindow class], wxUSE_TIPWINDOW)
 WX_ARG_FEATURE(togglebtn,   [  --enable-togglebtn      use wxToggleButton class], wxUSE_TOGGLEBTN)
 WX_ARG_FEATURE(toolbar,     [  --enable-toolbar        use wxToolBar class], wxUSE_TOOLBAR)
@@ -1247,7 +1247,7 @@ dnl We need to quote the next line where we don't need macros and do need [] in 
         MACOSX_SDK_PLIST_VERSION_MIN=`defaults read "$wxUSE_MACOSX_SDK/SDKSettings" buildSettings | grep '^ *"\{0,1\}MACOSX_DEPLOYMENT_TARGET"\{0,1\} *= *"\{0,1\}[^"]*"\{0,1\}; *$' | sed 's/^ *"\{0,1\}MACOSX_DEPLOYMENT_TARGET"\{0,1\} *= *"\{0,1\}\([^"]*\)"\{0,1\} *; *$/\1/'`
 ]
         # If that failed, try again with the new key
-        if test "x$MACOSX_SDK_PLIST_VERSION_MIN" == "x"; then
+        if test "x$MACOSX_SDK_PLIST_VERSION_MIN" = "x"; then
 [
             MACOSX_SDK_PLIST_VERSION_MIN=`defaults read "$wxUSE_MACOSX_SDK/SDKSettings" DefaultProperties | grep '^ *"\{0,1\}MACOSX_DEPLOYMENT_TARGET"\{0,1\} *= *"\{0,1\}[^"]*"\{0,1\}; *$' | sed 's/^ *"\{0,1\}MACOSX_DEPLOYMENT_TARGET"\{0,1\} *= *"\{0,1\}\([^"]*\)"\{0,1\} *; *$/\1/'`
 ]
@@ -2354,6 +2354,9 @@ else
 fi
 AC_LANG_POP()
 
+dnl Find pkg-config outside of any conditional.  Done before any PKG_* call.
+PKG_PROG_PKG_CONFIG
+
 dnl ---------------------------------------------------------------------------
 dnl Optional libraries
 dnl
@@ -3034,8 +3037,6 @@ libraries returned by 'pkg-config gtk+-2.0 --libs' or 'gtk-config
     fi
 
     if test "$wxUSE_DFB" = 1; then
-       PKG_PROG_PKG_CONFIG()
-
        PKG_CHECK_MODULES(DIRECTFB,
                          [directfb >= 0.9.23],
                          [
@@ -3110,8 +3111,6 @@ libraries returned by 'pkg-config gtk+-2.0 --libs' or 'gtk-config
         fi
 
         if test "$wxUSE_UNICODE" = "yes"; then
-            PKG_PROG_PKG_CONFIG()
-
             PKG_CHECK_MODULES(PANGOXFT, pangoxft,
                 [
                     AC_DEFINE(HAVE_PANGO_XFT)
@@ -4312,9 +4311,17 @@ fi
 
 dnl at least under IRIX with mipsPro the C99 round() function is available when
 dnl building using the C compiler but not when using C++ one
+AC_CACHE_CHECK([for round], wx_cv_func_round, [
 AC_LANG_PUSH(C++)
-WX_CHECK_FUNCS(round,,,[#include <math.h>])
+AC_TRY_LINK(
+    [#include <math.h>],
+    [return int(round(0.0))],
+    wx_cv_func_round=yes, wx_cv_func_round=no)
 AC_LANG_POP()
+])
+if test "$wx_cv_func_round" = yes; then
+    AC_DEFINE(HAVE_ROUND)
+fi
 
 dnl the following tests are for Unix(like) systems only
 if test "$TOOLKIT" != "MSW"; then
@@ -5046,15 +5053,6 @@ if test "$TOOLKIT" != "MSW" -a "$USE_OS2" != 1; then
         fi
       fi
 
-      if test "$wxUSE_COMPILER_TLS" = "auto"; then
-          if test "$USE_NETBSD" = 1; then
-              AC_MSG_WARN([Disabling TLS under NetBSD, please contact wx-dev if it works now])
-              wxUSE_COMPILER_TLS=no
-          else
-              wxUSE_COMPILER_TLS=yes
-          fi
-      fi
-
       if test "$wxUSE_COMPILER_TLS" = "yes"; then
           dnl test for compiler thread-specific variables support
           AC_CACHE_CHECK([for __thread keyword],
@@ -5608,8 +5606,6 @@ WITH_PLUGIN_SDL=0
 if test "$wxUSE_SOUND" = "yes"; then
   if test "$USE_UNIX" = 1 ; then
     if test "$wxUSE_LIBSDL" != "no"; then
-      PKG_PROG_PKG_CONFIG()
-
       PKG_CHECK_MODULES([SDL], [sdl2 >= 2.0.0],
                   [
                     EXTRALIBS_SDL="$SDL_LIBS"
@@ -5641,8 +5637,6 @@ if test "$wxUSE_SOUND" = "yes"; then
 fi
 
 if test "$WXGTK2" = 1; then
-    PKG_PROG_PKG_CONFIG()
-
     if test "$wxUSE_PRINTING_ARCHITECTURE" = "yes" ; then
 
         if test "$wxUSE_GTKPRINT" = "yes" ; then
@@ -5926,6 +5920,8 @@ if test "$wxUSE_INTL" = "yes" ; then
 fi
 
 if test "$wxUSE_XLOCALE" = "yes" ; then
+    AC_DEFINE(wxUSE_XLOCALE)
+
     dnl even if xlocale.h exists, it may not contain all that
     dnl wx needs. check if strtod_l() really is available.
     AC_CACHE_CHECK([for complete xlocale],
@@ -5949,7 +5945,9 @@ if test "$wxUSE_XLOCALE" = "yes" ; then
     ])
 
     if test "$wx_cv_use_xlocale_local" = "yes" ; then
-        AC_DEFINE(wxUSE_XLOCALE)
+        dnl We don't test (just) for locale_t existence, but we still define
+        dnl this symbol to avoid changing the existing code using it.
+        AC_DEFINE(HAVE_LOCALE_T)
     fi
 fi
 
@@ -7666,6 +7664,7 @@ if test "$wxUSE_MEDIACTRL" = "yes" -o "$wxUSE_MEDIACTRL" = "auto"; then
 
             AC_DEFINE(wxUSE_GSTREAMER)
         else
+            AC_MSG_WARN([wxMediaCtrl can't be built because GStreamer not available])
             USE_MEDIA=0
         fi
 
@@ -7680,37 +7679,66 @@ if test "$wxUSE_MEDIACTRL" = "yes" -o "$wxUSE_MEDIACTRL" = "auto"; then
 
             old_CPPFLAGS="$CPPFLAGS"
             CPPFLAGS="-x objective-c++ $CPPFLAGS"
-            if test "$wxOSX_USE_QTKIT" = "no"; then
-                dnl Do not test for QTKit if has been disabled from the command line
-                AC_DEFINE(wxOSX_USE_QTKIT,0)
-                GST_LIBS="-framework AVFoundation -framework CoreMedia"
-            else
-                dnl check if QTKit is available, otherwise force AVFoundation usage
+            dnl check if QTKit is available, unless it was explicitly disabled
+            if test "$wxOSX_USE_QTKIT" != "no"; then
                 AC_CHECK_HEADER([QTKit/QTKit.h],
                                 [
                                     GST_LIBS="-framework QTKit"
                                 ],
                                 [
-                                    AC_DEFINE(wxOSX_USE_QTKIT,0)
                                     wxOSX_USE_QTKIT=no
-                                    GST_LIBS="-framework AVFoundation -framework CoreMedia"
                                 ])
             fi
             if test "$wxOSX_USE_QTKIT" = "no"; then
-                dnl AVKit is only available since OS X 10.9
-                AC_MSG_CHECKING([if AVKit is available])
-                AC_TRY_COMPILE(
-                    [#include "AvailabilityMacros.h"],
+                AC_DEFINE(wxOSX_USE_QTKIT,0)
+
+                dnl AVFoundation is only available since OS X 10.7
+                AC_CACHE_CHECK(
+                    [if AVFoundation is available],
+                    [wx_cv_has_avfoundation],
                     [
-                        #if defined(MAC_OS_X_VERSION_10_9) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
-                            // AVKit available
-                        #else
-                            choke me
-                        #endif
-                    ],
-                    [GST_LIBS="$GST_LIBS -framework AVKit"; AC_MSG_RESULT(yes)],
-                    AC_MSG_RESULT(no)
+                        AC_COMPILE_IFELSE([
+                            AC_LANG_PROGRAM(
+                                [#include "AvailabilityMacros.h"],
+                                [
+                                    #if defined(MAC_OS_X_VERSION_10_9) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
+                                        // AVKit available
+                                    #else
+                                        choke me
+                                    #endif
+                                ],
+                            )],
+                            [wx_cv_has_avfoundation=yes],
+                            [wx_cv_has_avfoundation=no]
+                            )
+                    ]
                 )
+
+                if test "$wx_cv_has_avfoundation" = "yes"; then
+                    GST_LIBS="-framework AVFoundation -framework CoreMedia"
+
+                    dnl AVKit is only available since OS X 10.9
+                    AC_MSG_CHECKING([if AVKit is available])
+                    AC_TRY_COMPILE(
+                        [#include "AvailabilityMacros.h"],
+                        [
+                            #if defined(MAC_OS_X_VERSION_10_9) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
+                                // AVKit available
+                            #else
+                                choke me
+                            #endif
+                        ],
+                        [GST_LIBS="$GST_LIBS -framework AVKit"; AC_MSG_RESULT(yes)],
+                        AC_MSG_RESULT(no)
+                    )
+                else
+                    AC_MSG_WARN([wxMediaCtrl can't be built because Neither QTKit nor AVFoundation can be used.
+
+    Either use an older SDK with QTKit support or use --with-macosx-version-min
+    configure option specifying 10.7 or or higher to allow using AVFoundation.
+])
+                    USE_MEDIA=0
+                fi
             fi
             CPPFLAGS="$old_CPPFLAGS"
         fi
@@ -7721,10 +7749,10 @@ if test "$wxUSE_MEDIACTRL" = "yes" -o "$wxUSE_MEDIACTRL" = "auto"; then
         AC_DEFINE(wxUSE_MEDIACTRL)
     else
         if test "$wxUSE_MEDIACTRL" = "yes"; then
-            AC_MSG_ERROR([GStreamer not available])
-        else
-            dnl was set to 'auto'
-            AC_MSG_WARN([GStreamer not available... disabling wxMediaCtrl])
+            AC_MSG_ERROR([wxMediaCtrl was explicitly requested but can't be built.
+
+    Fix the problems reported above or don't use --enable-mediactrl configure option.
+])
         fi
     fi
 fi
@@ -7996,22 +8024,6 @@ OBJCXXFLAGS=`echo $WXCONFIG_CXXFLAGS $C_AND_CXX_FLAGS $OBJCXXFLAGS `
 dnl now that we added WXCONFIG_CPPFLAGS to CPPFLAGS we can add the wx-config
 dnl only stuff to it
 WXCONFIG_CPPFLAGS=`echo $WXCONFIG_CPPFLAGS $WXCONFIG_ONLY_CPPFLAGS`
-
-
-if test "x$MWCC" = "xyes"; then
-    dnl Correct MW 8.3 to be more similar to GCC.  In particular we
-    dnl must use <regex.h> from system not our local copy on OS X,
-    dnl but must use local not system on OS 9.
-    dnl The following should make all -I paths usable for <> includes
-    dnl while first checking in real system paths.  With 8.3 using
-    dnl -gccincludes it will actually check local paths before system
-    dnl even for <> which is totally wrong.
-
-    dnl Note that because this absolutely needs to be before any -I
-    dnl that we have to tack it on to the end of the compiler commandline.
-    CC="$CC -cwd source -I-"
-    CXX="$CXX -cwd source -I-"
-fi
 
 
 LIBS=`echo $LIBS`
@@ -8547,7 +8559,15 @@ else
     SUBDIRS="samples utils"
 fi
 dnl Add tests to the list of subdirs if cppunit 1.8.0+ is detected
-AM_PATH_CPPUNIT(1.8.0, [SUBDIRS="$SUBDIRS tests"])
+AM_PATH_CPPUNIT(1.8.0,
+    [SUBDIRS="$SUBDIRS tests"],
+    [
+        PKG_CHECK_MODULES(CPPUNIT, [cppunit >= 1.8.0],
+            [SUBDIRS="$SUBDIRS tests"],
+            [AC_MSG_WARN([cppunit not found])]
+        )
+    ]
+)
 
 for subdir in $SUBDIRS; do
     if test -d ${srcdir}/${subdir} ; then

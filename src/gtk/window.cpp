@@ -849,14 +849,10 @@ wxTranslateGTKKeyEventToWx(wxKeyEvent& event,
 
     wxLogTrace(TRACE_KEYS, wxT("\t-> wxKeyCode %ld"), key_code);
 
-    // sending unknown key events doesn't really make sense
-    if ( !key_code )
-        return false;
-
     event.m_keyCode = key_code;
 
 #if wxUSE_UNICODE
-    event.m_uniChar = gdk_keyval_to_unicode(key_code);
+    event.m_uniChar = gdk_keyval_to_unicode(key_code ? key_code : gdk_event->keyval);
     if ( !event.m_uniChar && event.m_keyCode <= WXK_DELETE )
     {
         // Set Unicode key code to the ASCII equivalent for compatibility. E.g.
@@ -864,6 +860,13 @@ wxTranslateGTKKeyEventToWx(wxKeyEvent& event,
         // codes of 13.
         event.m_uniChar = event.m_keyCode;
     }
+
+    // sending unknown key events doesn't really make sense
+    if ( !key_code && !event.m_uniChar )
+        return false;
+#else
+    if (!key_code)
+        return false;
 #endif // wxUSE_UNICODE
 
     // now fill all the other fields
@@ -1994,10 +1997,41 @@ gtk_window_realized_callback(GtkWidget* WXUNUSED(widget), wxWindowGTK* win)
 //-----------------------------------------------------------------------------
 
 static void
-size_allocate(GtkWidget*, GtkAllocation* alloc, wxWindow* win)
+size_allocate(GtkWidget*
+#if GTK_CHECK_VERSION(3,14,0)
+                         widget
+#endif
+                               , GtkAllocation* alloc, wxWindow* win)
 {
     int w = alloc->width;
     int h = alloc->height;
+#if GTK_CHECK_VERSION(3,14,0)
+    if (gtk_check_version(3,14,0) == NULL)
+    {
+        // Prevent under-allocated widgets from drawing outside their allocation
+        GtkAllocation clip;
+        gtk_widget_get_clip(widget, &clip);
+        if (clip.width > w || clip.height > h)
+        {
+            GtkStyleContext* sc = gtk_widget_get_style_context(widget);
+            int outline_offset, outline_width;
+            gtk_style_context_get(sc, gtk_style_context_get_state(sc),
+                "outline-offset", &outline_offset, "outline-width", &outline_width, NULL);
+            const int outline = outline_offset + outline_width;
+            GtkAllocation a = *alloc;
+            if (outline > 0)
+            {
+                // Allow enough room for focus indicator "outline", it's drawn
+                // outside of GtkCheckButton allocation with Adwaita theme
+                a.x -= outline;
+                a.y -= outline;
+                a.width += outline + outline;
+                a.height += outline + outline;
+            }
+            gtk_widget_set_clip(widget, &a);
+        }
+    }
+#endif
     if (win->m_wxwindow)
     {
         GtkBorder border;
@@ -3576,7 +3610,9 @@ void wxWindowGTK::SetFocus()
     // Because we want to FindFocus() call immediately following
     // foo->SetFocus() to return foo, we have to keep track of "pending" focus
     // ourselves.
-    gs_pendingFocus = this;
+    gs_pendingFocus = NULL;
+    if (gs_currentFocus != this)
+        gs_pendingFocus = this;
 
     GtkWidget *widget = m_wxwindow ? m_wxwindow : m_focusWidget;
 
@@ -4526,9 +4562,9 @@ void wxWindowGTK::GTKApplyWidgetStyle(bool forceStyle)
         }
         g_string_append_c(css, '}');
 
-        if (isFg && isBg)
+        if (isFg || isBg)
         {
-            // Selection will be invisible, so add textview selection colors.
+            // Selection may be invisible, so add textview selection colors.
             // This is specifically for wxTextCtrl, but may be useful for other
             // controls, and seems to do no harm to apply to all.
             const wxColour fg_sel(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHTTEXT));

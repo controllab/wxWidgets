@@ -5360,7 +5360,7 @@ wxColour wxGenericListCtrl::GetForegroundColour() const
 bool wxGenericListCtrl::DoPopupMenu( wxMenu *menu, int x, int y )
 {
 #if wxUSE_MENUS
-    return m_mainWin->PopupMenu( menu, x, y );
+    return wxListCtrlBase::DoPopupMenu( menu, x, y );
 #else
     return false;
 #endif
