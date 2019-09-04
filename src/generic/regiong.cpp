@@ -600,7 +600,7 @@ Region REGION::XCreateRegion(void)
 
     if (!temp->rects)
     {
-        free((char *) temp);
+        delete temp;
         return (Region) NULL;
     }
     temp->numRects = 0;
