@@ -8,3 +8,5 @@
 /build/msw/vc_mswd
 /build/msw/.vs
 /build/msw/ipch
+/build/msw/*.vcxproj.user
+/build/msw/wx_vc14.VC.db
