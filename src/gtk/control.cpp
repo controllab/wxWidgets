@@ -335,9 +335,21 @@ wxSize wxControl::GTKGetPreferredSize(GtkWidget* widget) const
 #ifdef __WXGTK3__
     int w, h;
     gtk_widget_get_size_request(widget, &w, &h);
+
+    // gtk_widget_get_preferred_size() just returns 0 if the control is hidden,
+    // so we have to temporarily show the widget before calling it to get
+    // something useful from it, if it's currently hidden.
+    // So workaround this case.
+    const bool wasHidden = !gtk_widget_get_visible(widget);
+    if ( wasHidden )
+        gtk_widget_show(widget);
+
     gtk_widget_set_size_request(widget, -1, -1);
     gtk_widget_get_preferred_size(widget, NULL, &req);
     gtk_widget_set_size_request(widget, w, h);
+
+    if ( wasHidden )
+        gtk_widget_hide(widget);
 #else
     GTK_WIDGET_GET_CLASS(widget)->size_request(widget, &req);
 #endif
@@ -347,35 +359,42 @@ wxSize wxControl::GTKGetPreferredSize(GtkWidget* widget) const
 
 wxPoint wxControl::GTKGetEntryMargins(GtkEntry* entry) const
 {
-    wxPoint marg(0, 0);
+    wxPoint size;
+    gtk_entry_get_layout_offsets(entry, &size.x, &size.y);
 
-#ifndef __WXGTK3__
+#ifdef __WXGTK3__
+    GtkBorder border;
+    GtkStyleContext* sc = gtk_widget_get_style_context(GTK_WIDGET(entry));
+    gtk_style_context_get_padding(sc, gtk_style_context_get_state(sc), &border);
+#else
+    // Equivalent to the GTK2 private function _gtk_entry_effective_inner_border()
+
+    GtkBorder border = { 2, 2, 2, 2 };
+
 #if GTK_CHECK_VERSION(2,10,0)
-    // The margins we have previously set
-    const GtkBorder* border = NULL;
     if (gtk_check_version(2,10,0) == NULL)
-        border = gtk_entry_get_inner_border(entry);
-
-    if ( border )
     {
-        marg.x = border->left + border->right;
-        marg.y = border->top + border->bottom;
+        const GtkBorder* innerBorder1 = gtk_entry_get_inner_border(entry);
+        if (innerBorder1)
+            border = *innerBorder1;
+        else
+        {
+            GtkBorder* innerBorder2;
+            gtk_widget_style_get(GTK_WIDGET(entry), "inner-border", &innerBorder2, NULL);
+            if (innerBorder2)
+            {
+                border = *innerBorder2;
+                gtk_border_free(innerBorder2);
+            }
+        }
     }
 #endif // GTK+ 2.10+
-#else // GTK+ 3
-    // Gtk3 does not use inner border, but StyleContext and CSS
-    // TODO: implement it, starting with wxTextEntry::DoSetMargins()
-#endif // GTK+ 2/3
+#endif
 
-    int x, y;
-    gtk_entry_get_layout_offsets(entry, &x, &y);
-    // inner borders are included. Substract them so we can get other margins
-    x -= marg.x;
-    y -= marg.y;
-    marg.x += 2 * x + 2;
-    marg.y += 2 * y + 2;
+    size.x += border.left + border.right;
+    size.y += border.top  + border.bottom;
 
-    return marg;
+    return size;
 }
 
 

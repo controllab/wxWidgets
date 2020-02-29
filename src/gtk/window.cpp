@@ -276,7 +276,7 @@ static gboolean expose_event(GtkWidget*, GdkEventExpose* gdk_event, wxWindow* wi
 extern "C" {
 static gboolean
 #ifdef __WXGTK3__
-draw_border(GtkWidget*, cairo_t* cr, wxWindow* win)
+draw_border(GtkWidget* widget, cairo_t* cr, wxWindow* win)
 #else
 draw_border(GtkWidget* widget, GdkEventExpose* gdk_event, wxWindow* win)
 #endif
@@ -293,10 +293,20 @@ draw_border(GtkWidget* widget, GdkEventExpose* gdk_event, wxWindow* win)
 
     GtkAllocation alloc;
     gtk_widget_get_allocation(win->m_wxwindow, &alloc);
-    const int x = alloc.x;
-    const int y = alloc.y;
+    int x = alloc.x;
+    int y = alloc.y;
     const int w = alloc.width;
     const int h = alloc.height;
+#ifdef __WXGTK3__
+    if (!gtk_widget_get_has_window(widget))
+    {
+        // cairo_t origin is set to widget's origin, need to adjust
+        // coordinates for child when they are not relative to parent
+        gtk_widget_get_allocation(widget, &alloc);
+        x -= alloc.x;
+        y -= alloc.y;
+    }
+#endif
 
     if (w <= 0 || h <= 0)
         return false;
@@ -3429,6 +3439,20 @@ void wxWindowGTK::DoGetTextExtent( const wxString& string,
     txm.GetTextExtent(string, x, y, descent, externalLeading);
 }
 
+#ifdef __WXGTK3__
+double wxWindowGTK::GetContentScaleFactor() const
+{
+    double scaleFactor = 1;
+#if GTK_CHECK_VERSION(3,10,0)
+    if (m_widget && gtk_check_version(3,10,0) == NULL)
+    {
+        scaleFactor = gtk_widget_get_scale_factor(m_widget);
+    }
+#endif
+    return scaleFactor;
+}
+#endif
+
 void wxWindowGTK::GTKDisableFocusOutEvent()
 {
     g_signal_handlers_block_by_func( m_focusWidget,
@@ -4121,6 +4145,7 @@ void wxWindowGTK::GTKSendPaintEvents(const GdkRegion* region)
 
     m_paintContext = cr;
     m_updateRegion = wxRegion(int(x1), int(y1), int(x2 - x1), int(y2 - y1));
+    m_nativeUpdateRegion = m_updateRegion;
 #else // !__WXGTK3__
     m_updateRegion = wxRegion(region);
 #if wxGTK_HAS_COMPOSITING_SUPPORT
